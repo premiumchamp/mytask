@@ -1,0 +1,45 @@
+<md-content ng-controller="NotificationCtrl">
+    <div layout="row" layout-xs="column" layout-sm="column" layout-padding>
+        <div flex>
+
+            <form name="form" novalidate>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>{{ 'MESSAGE' | translate }}</label>
+                        <textarea required placeholder ng-model="notification.message" md-maxlength="150" rows="3"></textarea>
+                        <div ng-messages="form.message.$error">
+                            <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                        </div>
+                    </md-input-container>
+                </div>
+
+                <div layout="row" layout-align="end center">
+                    <md-button class="md-raised md-primary"
+                      ng-disabled="!form.$valid"
+                      ng-click="onSubmit(form.$valid)">
+                        {{ !isSending ? ('SEND' | translate) : ('SENDING' | translate) }}
+                    </md-button>
+                </div>
+
+            </form>
+
+        </div>
+        <div flex>
+            <md-list class="scrollable" flex>
+                <md-subheader class="md-sticky">
+                  {{ 'LATEST_NOTIFICATIONS' | translate }}
+                </md-subheader>
+                <md-list-item class="md-2-line"
+                  ng-repeat="notification in notifications track by notification.id">
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{ notification.message }}</h3>
+                        <p>{{ notification.createdAt | date:'mediumDate' }}</p>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+            </md-list>
+        </div>
+    </section>
+
+</md-content>

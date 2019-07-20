@@ -1,0 +1,138 @@
+<md-dialog flex="100" flex-gt-xs="50" aria-label="App Config dialog">
+
+    <form name="form" role="form" novalidate>
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ 'APP_CONFIG' | translate }}</h2>
+                <span flex></span>
+                <ng-md-icon aria-label="Close dialog" icon="close" class="icon-close" ng-click="hide()">
+                </ng-md-icon>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+
+            <md-content layout="column" layout-padding>
+
+                <div>
+                    <p class="md-title">{{ 'ADMIN_PORTAL' | translate }}</p>
+                    <div layout="row" layout-align="start">
+                        <md-input-container md-no-float class="md-block" flex="70">
+                            <label>{{ 'LOGO' | translate }}</label>
+                            <input type="text" value="{{ obj.admin.logo.name() }}" disabled>
+                        </md-input-container>
+
+                        <div layout="column" layout-align="start center" flex="30">
+                            <ng-md-icon icon="photo_camera" class="photo-camera" ng-class="{ 'icon-active': obj.admin.logo.url() }">
+                            </ng-md-icon>
+                            <md-button type="button" class="md-raised md-mini"
+                              ngf-select="uploadImage('logo', $file)"
+                              ngf-accept="'image/*'"
+                              ngf-pattern="'image/*'">
+                              {{ 'BROWSE' | translate }}
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div layout="row" layout-align="start">
+                        <md-input-container md-no-float class="md-block" flex="70">
+                            <label>{{ 'FAVICON' | translate }} (PNG. 32x32px.)</label>
+                            <input type="text" value="{{ obj.admin.favicon.name() }}" disabled>
+                        </md-input-container>
+
+                        <div layout="column" layout-align="start center" flex="30">
+                            <ng-md-icon icon="photo_camera" class="photo-camera" ng-class="{ 'icon-active': obj.admin.favicon.url() }">
+                            </ng-md-icon>
+                            <md-button type="button" class="md-raised md-mini"
+                              ngf-select="uploadImage('favicon', $file)"
+                              ngf-accept="'image/*'"
+                              ngf-pattern="'image/*'">
+                              {{ 'BROWSE' | translate }}
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+
+                <md-divider></md-divider>
+
+                <p class="md-title">{{ 'MOBILE_APP_CONFIG' | translate }}</p>
+                <p class="md-body-1 no-margin">{{ 'ABOUT' | translate }}</p>
+                <trix-editor class="margin-bottom" angular-trix ng-model="obj.about.description">
+                </trix-editor>
+                <md-input-container flex>
+                    <label>{{ 'CONTACT_EMAIL' | translate }}</label>
+                    <input placeholder name="email" type="text" ng-model="obj.about.email">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'CONTACT_PHONE' | translate }}</label>
+                    <input placeholder name="phone" type="text" ng-model="obj.about.phone">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'FACEBOOK' | translate }}</label>
+                    <input placeholder name="facebook" type="text" ng-model="obj.about.facebook">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'INSTAGRAM' | translate }}</label>
+                    <input placeholder name="instagram" type="text" ng-model="obj.about.instagram">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'YOUTUBE' | translate }}</label>
+                    <input placeholder name="youtube" type="text" ng-model="obj.about.youtube">
+                </md-input-container>
+                <md-divider></md-divider>
+                <p class="md-title">{{ 'STRIPE_SETTINGS' | translate }}</p>
+                <md-input-container flex>
+                    <label>{{ 'SECRET_KEY' | translate }}</label>
+                    <input placeholder type="text" ng-model="obj.stripe.secretKey">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'CURRENCY' | translate }}</label>
+                    <input placeholder type="text" ng-model="obj.stripe.currency">
+                    <span class="md-caption link" ng-click="openStripeCurrencies()">
+                        {{ 'SUPPORTED_CURRENCIES' | translate }}
+                    </span>
+                </md-input-container>
+                <md-input-container flex>
+                    <label>{{ 'CHARGE_DESCRIPTION' | translate }}</label>
+                    <input placeholder type="text" ng-model="obj.stripe.chargeDescription">
+                    <span class="md-caption">{{ 'SUPPORTED_TAGS' | translate }}: %CUSTOMER_NAME%, %ORDER_NUMBER%</span>
+                </md-input-container>
+                <md-divider></md-divider>
+                <p class="md-title">{{ 'EMAIL_SETTINGS' | translate }}</p>
+                <md-input-container>
+                    <label>{{ 'EMAIL_FOR_NOTIFICATIONS_OF_NEW_ORDERS' | translate }}</label>
+                    <input type="email" name="email" placeholder ng-model="obj.email.addressForNewOrders">
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'SUBJECT_FOR_NOTIFICATIONS_OF_NEW_ORDERS' | translate }}</label>
+                    <input type="text" name="emailSubject" placeholder ng-model="obj.email.subjectForNewOrders">
+                    <span class="md-caption">{{ 'SUPPORTED_TAGS' | translate }}: %ORDER_NUMBER%, %ORDER_TOTAL%</span>
+                </md-input-container>
+
+                <md-divider></md-divider>
+
+                <p class="md-title">{{ 'PUSH_SETTINGS' | translate }}</p>
+
+                <md-input-container>
+                    <label>{{ 'ORDER_STATUS_NOTIFICATION' | translate }}</label>
+                    <input type="orderStatusNotification" name="orderStatusNotification" placeholder ng-model="obj.push.orderStatusNotification">
+                    <span class="md-caption">{{ 'SUPPORTED_TAGS' | translate }}: %ORDER_NUMBER%, %STATUS%</span>
+                </md-input-container>
+
+            </md-content>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button class="md-raised" md-primary md-raised ng-click="hide()">
+                {{ 'CLOSE' | translate }}
+            </md-button>
+            <md-button type="submit" class="md-raised md-primary" ng-click="onSave()">
+                {{ !isSaving ? ('SAVE' | translate) : ('SAVING' | translate) }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

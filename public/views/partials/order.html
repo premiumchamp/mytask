@@ -1,0 +1,128 @@
+<md-dialog flex="100" flex-gt-xs="60" aria-label="Order dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span>{{ 'ORDER_DETAILS' | translate }}</span>
+            <span flex></span>
+            <ng-md-icon icon="close" class="icon-close" ng-click="onCancel()" aria-label="Close">
+            </ng-md-icon>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div layout="row" layout-md="column" layout-xs="column" layout-padding>
+
+            <div flex>
+                <h2 class="md-headline">
+                    {{ 'ORDER' | translate }} #{{ order.number }}
+                    <span class="label border-radius"
+                      ng-class="{ yellow: order.isUnpaid(), green: order.isPaid(), blue: order.isPacked(), purple: order.isShippedOut(), red: order.isCancelled() }">
+                        <span ng-if="order.isUnpaid()">{{ 'UNPAID' | translate }}</span>
+                        <span ng-if="order.isPaid()">{{ 'PAID' | translate }}</span>
+                        <span ng-if="order.isPacked()">{{ 'PACKED' | translate }}</span>
+                        <span ng-if="order.isShippedOut()">{{ 'SHIPPED_OUT' | translate }}</span>
+                        <span ng-if="order.isCancelled()">{{ 'CANCELLED' | translate }}</span>
+                    </span>
+                </h2>
+
+                <h3 class="md-title">{{ 'PAYMENT' | translate }}</h3>
+                <div layout="row" ng-if="order.paymentMethod === 'Cash'">
+                    <img class="margin-vertical margin-right" width="30" height="30"
+                        ng-if="order.paymentMethod === 'Cash'"
+                        src="/images/cash.png"
+                        alt="Cash" />
+                    <p class="md-body-1">
+                        <span ng-if="order.paymentMethod === 'Cash'">
+                            {{ 'CASH' | translate }}
+                        </span>
+                        <span ng-if="order.paymentMethod === 'Card'">
+                            {{ 'CARD' | translate }}
+                        </span>
+                    </p>
+                </div>
+                
+                <div layout="row" ng-if="order.card">
+                    <img class="margin-vertical margin-right" width="30" height="30"
+                      ng-src="/images/{{ formatBrand() }}.png"
+                      alt="{{ order.card.brand }}" />
+                    <p class="md-body-1">
+                        {{ order.card.brand }}
+                        &#8226;&#8226;&#8226;&#8226;
+                        {{ order.card.last4 }} -
+                        <span class="link" ng-if="order.charge" ng-click="onChargeClicked()">
+                            {{ order.charge.id }}
+                        </span>
+                    </p>
+                </div>
+
+                <md-divider></md-divider>
+
+                <h3 class="md-title">{{ 'SHIPPING' | translate }}</h3>
+                <p class="md-body-1">
+                    {{ order.shipping.address }},
+                    {{ order.shipping.subzone.name }},
+                    {{ order.shipping.zone.name }}
+                </p>
+
+                <md-divider></md-divider>
+
+                <h3 class="md-title">{{ 'CUSTOMER_INFO' | translate }}</h3>
+                <p class="md-body-1">{{ order.customer.name }}</p>
+                <p class="md-body-1">{{ order.contactNumber }}</p>
+            </div>
+
+            <div flex>
+
+                <md-list-item class="md-3-line no-padding"
+                ng-repeat="item in order.items track by item.objectId">
+                    <img class="md-avatar"
+                      ng-src="{{ item.featuredImageThumb.url() }}"
+                      alt="{{ item.name }}" />
+                    <div class="md-list-item-text" layout="column">
+                        <h3 class="no-margin text-wrap">
+                            {{ item.qty }} x {{ item.name }}
+                        </h3>
+                        <h4 ng-if="!item.salePrice">
+                            <small>
+                                <span>{{ item.price | currency }}</span>
+                            </small>
+                        </h4>
+                        <p ng-if="item.salePrice">
+                            <small>
+                                <s>
+                                    {{ item.price | currency }}
+                                </s>
+                                <span>{{ item.salePrice | currency }}</span>
+                            </small>
+                        </p>
+                        <p class="md-secondary md-body-1 padding-items-order">
+                            {{ item.amount | currency }}
+                        </p>
+                    </div>
+                </md-list-item>
+
+                <md-divider></md-divider>
+
+                <div layout="row" class="margin-bottom margin-top">
+                    <p flex class="md-subhead no-margin">{{ 'SUBTOTAL' | translate }}</p>
+                    <p class="md-subhead no-margin text-right">
+                        {{ order.subtotal | currency }}
+                    </p>
+                </div>
+
+                <div layout="row" class="margin-bottom">
+                    <p flex class="md-subhead no-margin">{{ 'SHIPPING_FEE' | translate }}</p>
+                    <p class="md-subhead no-margin text-right">
+                        {{ (order.shipping.subzone.fee || 0) | currency }}
+                    </p>
+                </div>
+                <div layout="row" class="margin-bottom">
+                    <p flex class="md-subhead no-margin">{{ 'TOTAL' | translate }}</p>
+                    <p class="md-subhead bold no-margin text-right">
+                        {{ order.total | currency }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>

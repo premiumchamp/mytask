@@ -1,0 +1,36 @@
+{
+  "name": "ionshop-admin",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ParsePlatform/parse-server-example"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.17.1",
+    "cookie-parser": "1.4.1",
+    "cookie-session": "2.0.0-alpha.1",
+    "dotenv": "^6.2.0",
+    "ejs": "2.4.1",
+    "express": "4.14.0",
+    "express-ejs-layouts": "2.0.0",
+    "kerberos": "0.0.23",
+    "limax": "^1.7.0",
+    "mailgen": "1.0.20",
+    "mailgun-js": "0.7.7",
+    "method-override": "2.3.8",
+    "parse": "2.1.0",
+    "parse-dashboard": "^1.2.0",
+    "parse-server": "3.1.3",
+    "@parse/fs-files-adapter": "1.0.1",
+    "@parse/simple-mailgun-adapter": "1.0.2",
+    "sharp": "^0.18.4",
+    "pm2": "^3.2.2",
+    "stripe": "6.25.1"
+  },
+  "engines": {
+    "node": "10.15.0"
+  }
+}

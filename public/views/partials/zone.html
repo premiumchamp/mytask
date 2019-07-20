@@ -1,0 +1,91 @@
+<md-dialog flex="100" flex-gt-xs="50" aria-label="Zone dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span ng-if="obj.isNew()">{{ 'NEW' | translate }}</span>
+            <span ng-if="!obj.isNew()">{{ 'EDIT' | translate }}</span>
+            <span flex></span>
+            <ng-md-icon icon="close" class="icon-close" ng-click="onCancel()" aria-label="Close dialog"></ng-md-icon>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+
+            <form name="form" novalidate>
+
+                <div layout="row" layout-xs="column" layout-sm="column">
+
+                    <div flex="50">
+                        <div layout="column">
+                            <md-input-container flex>
+                                <label>{{ 'NAME' | translate }}</label>
+                                <input required placeholder name="name" ng-model="obj.name">
+                                <div ng-messages="form.name.$error">
+                                    <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>{{ 'SORT' | translate }}</label>
+                                <input required placeholder name="sort" type="number" min="0" ng-model="obj.sort">
+                                <div ng-messages="form.sort.$error">
+                                    <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                    <div ng-message="min">{{ 'INVALID_VALUE' | translate }}</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>{{ 'FEE' | translate }}</label>
+                                <input placeholder name="fee" type="number" ng-model="obj.fee" min="0">
+                                <div ng-messages="form.fee.$error">
+                                    <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                    <div ng-message="min">{{ 'INVALID_VALUE' | translate }}</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <div flex="50" class="padding">
+                        <div layout="row">
+                            <div flex="30">
+                                {{ 'TYPE' | translate }}
+                            </div>
+                            <div flex="70">
+                                <md-radio-group required ng-model="obj.type">
+                                    <md-radio-button ng-click="onTypeSelected('Parent')" ng-value="'Parent'" class="md-primary">{{ 'PARENT' | translate }}</md-radio-button>
+                                </md-radio-group>
+                                <md-radio-group required ng-model="obj.type">
+                                    <md-radio-button ng-click="onTypeSelected('Child')" ng-value="'Child'" class="md-primary">{{ 'CHILD' | translate }}</md-radio-button>
+                                </md-radio-group>
+
+                                <md-input-container>
+                                    <md-select ng-model="obj.parent" placeholder="{{ 'PARENT' | translate }}" ng-required="obj.type === 'Child'" ng-disabled="obj.type === 'Parent'"
+                                        ng-model-options="{ trackBy: '$value.id' }">
+                                        <md-optgroup label="Parent">
+                                            <md-option ng-repeat="zone in zones track by zone.id" ng-value="zone">
+                                                {{ zone.name }}
+                                            </md-option>
+                                        </md-optgroup>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                        </div>
+                        <div layout="row">
+                            <div flex>
+                                <md-checkbox ng-model="obj.isActive" aria-label="Is Active">
+                                    {{ 'ACTIVE' | translate }}
+                                </md-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button class="md-raised" ng-click="onCancel()">
+            {{ 'CLOSE' | translate }}
+        </md-button>
+        <md-button class="md-primary md-raised" ng-disabled="!form.$valid || isSaving" ng-click="onSubmit(form.$valid)">
+            {{ !isSaving ? ('SAVE' | translate) : ('SAVING' | translate) }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

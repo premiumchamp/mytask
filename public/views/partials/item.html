@@ -1,0 +1,161 @@
+<md-dialog flex="100" flex-gt-xs="60" aria-label="dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span ng-if="obj.isNew()">{{ 'NEW' | translate }}</span>
+            <span ng-if="!obj.isNew()">{{ 'EDIT' | translate }}</span>
+            <span flex></span>
+            <ng-md-icon icon="close" class="icon-close" ng-click="onClose()" aria-label="Close dialog">
+            </ng-md-icon>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <form name="form" novalidate>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{ 'GENERAL' | translate }}">
+                    <div layout="row" layout-xs="column" layout-sm="column" layout-padding>
+                        <div flex="50">
+                            <div layout="column">
+                                <md-input-container flex>
+                                    <label>{{ 'NAME' | translate }}</label>
+                                    <input required placeholder name="name" type="text" ng-model="obj.name">
+                                    <div ng-messages="form.name.$error">
+                                        <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container flex>
+                                    <label>{{ 'PRICE' | translate }}</label>
+                                    <input required placeholder name="price" type="number" ng-model="obj.price">
+                                    <div ng-messages="form.price.$error">
+                                        <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container flex>
+                                    <label>{{ 'SALE_PRICE' | translate }}</label>
+                                    <input placeholder name="salePrice" type="number" ng-model="obj.salePrice">
+                                </md-input-container>
+
+                                <md-input-container flex>
+                                    <label>{{ 'CATEGORY' | translate }}</label>
+                                    <md-select name="category" aria-label="Category"
+                                    ng-change="onCategoryChanged()"
+                                    ng-model="obj.category" ng-model-options="{ trackBy: '$value.id' }" required>
+                                        <md-option ng-value="category" ng-repeat="category in categories track by category.id">{{ category.name }}</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container flex>
+                                    <label>{{ 'SUBCATEGORY' | translate }}</label>
+                                    <md-select name="subcategory" aria-label="Sub Category" ng-model="obj.subcategory" ng-model-options="{ trackBy: '$value.id' }">
+                                        <md-option ng-value="subcategory" ng-repeat="subcategory in subcategories track by subcategory.id">{{ subcategory.name }}</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+                        </div>
+                        <div flex="50" class="padding">
+
+                            <div layout="row" layout-align="start">
+
+                                <md-input-container md-no-float class="md-block" flex="70">
+                                    <label>{{ 'FEATURED_IMAGE' | translate }}</label>
+                                    <input type="text" value="{{ obj.featuredImage.name() }}" disabled />
+                                </md-input-container>
+
+                                <div layout="column" layout-align="center center" flex="30" class="margin">
+                                    <md-button type="button" class="md-raised md-mini" ngf-select="onUploadFeaturedImage($file)"
+                                    ngf-accept="'image/*'" ngf-pattern="'image/*'">
+                                        {{ 'BROWSE' | translate }}
+                                    </md-button>
+                                    <md-progress-circular class="md-primary" md-diameter="30" ng-if="isUploading">
+                                    </md-progress-circular>
+                                </div>
+                            </div>
+
+                            <div layout="row">
+                                <div flex>
+                                    <md-checkbox ng-model="obj.isFeatured" aria-label="Featured">
+                                        {{ 'FEATURED' | translate }}
+                                    </md-checkbox>
+                                </div>
+                            </div>
+
+                            <div layout="row">
+                                <div flex>
+                                    <md-checkbox ng-model="obj.isNewArrival" aria-label="Is new arrival">
+                                        {{ 'NEW_ARRIVAL' | translate }}
+                                    </md-checkbox>
+                                </div>
+                            </div>
+
+                            <div layout="row" class="no-margin no-padding">
+                                <md-input-container flex="100">
+                                    <label>{{ 'STATUS' | translate }}</label>
+                                    <md-select name="status" aria-label="Status" required ng-model="obj.status">
+                                        <md-option value="Active">{{ 'ACTIVE' | translate }}</md-option>
+                                        <md-option value="Inactive">{{ 'INACTIVE' | translate }}</md-option>
+                                    </md-select>
+                                    <div ng-messages="form.status.$error">
+                                        <div ng-message="required">{{ 'FIELD_REQUIRED' | translate }}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
+                </md-tab>
+
+                <md-tab label="{{ 'DESCRIPTION' | translate }}">
+                    <div class="padding">
+                        <trix-editor angular-trix ng-model="obj.description"></trix-editor>
+                    </div>
+                </md-tab>
+
+                <md-tab label="{{ 'GALLERY' | translate }}">
+                    <div class="padding">
+
+                        <div class="margin-bottom">
+                            <md-button class="md-raised" type="button"
+                              ngf-select="onUploadImage($file)"
+                              ngf-accept="'image/*'" ngf-pattern="'image/*'">
+                                {{ 'BROWSE' | translate }}
+                            </md-button>
+                        </div>
+
+                        <div layout="column">
+                            <div layout="row" class="no-padding margin-bottom" layout-align="center center" ng-repeat="image in images track by $index">
+
+                                <md-input-container md-no-float class="md-block no-margin" flex="70">
+                                    <input type="text" aria-label="Filename" ng-value="image.file.name()" disabled>
+                                </md-input-container>
+
+                                <div layout="row" layout-align="start center" class="margin-horizontal" flex="30">
+                                    <a ng-click="onImageClicked(image.file)">
+                                        <div class="bg-thumb" ng-style="{ 'background-image': 'url(' + image.file.url() + ')' }">
+                                        </div>
+                                    </a>
+                                    <md-progress-circular class="md-primary" md-diameter="30" ng-show="image.isUploading">
+                                    </md-progress-circular>
+                                    <md-button ng-click="onDeleteImage(image)" class="md-icon-button md-primary" aria-label="Delete">
+                                        <ng-md-icon icon="clear"></ng-md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </md-tab>
+
+            </md-tabs>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="onClose()">
+            {{ 'CLOSE' | translate }}
+        </md-button>
+        <md-button class="md-primary md-raised" ng-disabled="!form.$valid || isSaving" ng-click="onSubmit(form.$valid)">
+            {{ !isSaving ? ('SAVE' | translate) : ('SAVING' | translate) }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

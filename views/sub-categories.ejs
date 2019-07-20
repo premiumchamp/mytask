@@ -1,0 +1,81 @@
+<md-content class="main-content" ng-controller="SubCategoryCtrl">
+    <md-table-toolbar>
+        <div layout="row" layout-xs="column" layout-sm="column" class="padding"
+        layout-align-gt-sm="center center">
+            <md-input-container class="md-block no-margin margin-r-6" md-no-float flex="100" flex-gt-md="25">
+                <input type="text" placeholder="{{ 'SEARCH' | translate }}"
+                    ng-model="query.canonical"
+                    ng-keypress="$event.keyCode === 13 && onRefresh()" />
+            </md-input-container>
+            <md-input-container class="md-block no-margin" md-no-float flex="100" flex-gt-md="25">
+                <md-select ng-model="query.category" placeholder="{{ 'PARENT' | translate }}"
+                    ng-change="onRefresh()"
+                    ng-model-options="{ trackBy: '$value.id' }">
+                    <md-option value="">
+                        {{ 'ALL' | translate }}
+                    </md-option>
+                    <md-option ng-repeat="category in categories track by category.id" ng-value="category">
+                        {{ category.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <span flex></span>
+            <md-button class="md-primary md-raised"
+                md-colors="::{ color: 'white' }"    
+                aria-label="New"
+                ng-click="onEdit($event)">
+                {{ 'CREATE' | translate }}
+            </md-button>
+            
+        </div>
+    </md-table-toolbar>
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head md-on-reorder="onReorder">
+                <tr md-row>
+                    <th class="text-center text-uppercase bold" md-column md-order-by="name">
+                      <md-icon></md-icon>{{ 'NAME' | translate }}
+                    </th>
+                    <th class="text-center text-uppercase bold" md-column>{{ 'CATEGORY' | translate }}</th>
+                    <th md-column class="text-center text-uppercase bold">{{ 'STATUS' | translate }}</th>
+                    <th md-column class="text-center text-uppercase bold">
+                        <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                            <span class="text-center" flex="25">{{ 'EDIT' | translate }}</span>
+                            <span class="text-center" flex="20">|</span>
+                            <span class="text-left" flex="25">{{ 'DELETE' | translate }}</span>
+                        </section>
+                    </th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="subcategory in subcategories">
+                    <td md-cell class="text-center">{{:: subcategory.name }}</td>
+                    <td md-cell class="text-center">{{:: subcategory.category.name }}</td>
+                    <td md-cell class="text-center">
+                        <md-select class="label" aria-label="Change status" ng-model="subcategory.status" ng-class="::{ yellow: subcategory.isInactive(), green: subcategory.isActive() }">
+                            <md-option value="Active" ng-click="onChangeStatus(subcategory, 'Active')">
+                                {{ 'ACTIVE' | translate }}
+                            </md-option>
+                            <md-option value="Inactive" ng-click="onChangeStatus(subcategory, 'Inactive')">
+                                {{ 'INACTIVE' | translate }}
+                            </md-option>
+                        </md-select>
+                    </td>
+                    <td md-cell>
+                        <section layout="row" layout-align="center center">
+                            <md-button class="md-icon-button md-primary" ng-click="onEdit($event, subcategory)" aria-label="Edit">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="onDelete($event, subcategory)" aria-label="Delete">
+                                <ng-md-icon icon="clear"></ng-md-icon>
+                            </md-button>
+                        </section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-limit-options="rowOptions" md-limit="query.limit" md-page="query.page" md-total="{{query.total}}"
+        md-on-paginate="onPaginationChange">
+    </md-table-pagination>
+</md-content>

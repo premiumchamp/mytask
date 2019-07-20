@@ -1,0 +1,69 @@
+<md-content class="main-content" ng-controller="CategoryCtrl">
+    <md-table-toolbar>
+        <div layout="row" layout-xs="column" layout-sm="column" class="padding"
+        layout-align-gt-sm="start center">
+            <md-input-container class="md-block no-margin margin-right padding-bottom" md-no-float flex="100" flex-gt-md="25">
+                <input type="text" placeholder="{{ 'SEARCH' | translate }}"
+                    ng-model="query.canonical"
+                    ng-keypress="$event.keyCode === 13 && onRefresh()" />
+            </md-input-container>
+            <md-input-container class="md-block no-margin padding-bottom" md-no-float flex="100" flex-gt-md="25">
+               <md-checkbox class="no-margin" aria-label="Featured" ng-change="onRefresh()" ng-model="query.isFeatured">{{ 'ONLY_FEATURED' | translate }}</md-checkbox>
+            </md-input-container>
+            <span flex></span>
+            <md-button class="md-primary md-raised"
+                md-colors="::{ color: 'white' }"    
+                aria-label="New"
+                ng-click="onEdit($event)">
+                {{ 'CREATE' | translate }}
+            </md-button>
+        </div>
+    </md-table-toolbar>
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head md-on-reorder="onReorder">
+                <tr md-row>
+                    <th class="text-center text-uppercase bold" md-column md-order-by="name">
+                      <md-icon></md-icon>{{ 'NAME' | translate }}
+                    </th>
+                    <th class="text-center text-uppercase bold" md-column>{{ 'FEATURED' | translate }}</th>
+                    <th md-column class="text-center text-uppercase bold">{{ 'STATUS' | translate }}</th>
+                    <th md-column></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="category in categories">
+                    <td md-cell class="text-center">{{:: category.name }}</td>
+                    <td md-cell class="text-center">
+                    {{:: category.isFeatured ? ('YES' | translate): ('NO' | translate) }}
+                    </td>
+                    <td md-cell class="text-center">
+                        <md-select class="label" aria-label="Change Status"
+                          ng-model="category.status"
+                          ng-class="::{ yellow: category.isInactive(), green: category.isActive() }">
+                            <md-option value="Active" ng-click="onChangeStatus(category, 'Active')">
+                                {{ 'ACTIVE' | translate }}
+                            </md-option>
+                            <md-option value="Inactive" ng-click="onChangeStatus(category, 'Inactive')">
+                                {{ 'INACTIVE' | translate }}
+                            </md-option>
+                        </md-select>
+                    </td>
+                    <td md-cell>
+                        <section layout="row" layout-align="center center">
+                            <md-button class="md-icon-button md-primary" ng-click="onEdit($event, category)" aria-label="Edit" flex="35">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="onDelete($event, category)" aria-label="Delete" flex="35">
+                                <ng-md-icon icon="clear"></ng-md-icon>
+                            </md-button>
+                        </section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-limit-options="rowOptions" md-limit="query.limit" md-page="query.page" md-total="{{query.total}}"
+        md-on-paginate="onPaginationChange">
+    </md-table-pagination>
+</md-content>

@@ -1,0 +1,15 @@
+{
+  "name": "smartphoto",
+  "homepage": "https://github.com/appleple/SmartPhoto",
+  "version": "1.3.2",
+  "_release": "1.3.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.3.2",
+    "commit": "f1dff522b76fea8682b9ad8e8ab219839ba9dcf0"
+  },
+  "_source": "https://github.com/appleple/SmartPhoto.git",
+  "_target": "^1.3.2",
+  "_originalSource": "smartphoto",
+  "_direct": true
+}

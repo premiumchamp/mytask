@@ -1,0 +1,87 @@
+<md-content class="main-content" ng-controller="ItemCtrl">
+    <md-table-toolbar>
+        <div layout="row" layout-align="center center" class="padding">
+            <md-input-container class="md-block no-margin" md-no-float flex-gt-xs>
+                <input type="text" placeholder="{{ 'SEARCH' | translate }}"
+                    ng-model="query.canonical"
+                    ng-keypress="$event.keyCode === 13 && onReload()" />
+            </md-input-container>
+            <span flex></span>
+            <md-button class="md-primary md-raised"
+                md-colors="::{ color: 'white' }"    
+                aria-label="New"
+                ng-click="onEdit($event)">
+                {{ 'CREATE' | translate }}
+            </md-button>
+        </div>
+    </md-table-toolbar>
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head md-on-reorder="onReorder">
+                <tr md-row>
+                    <th class="text-center text-uppercase bold" md-column md-order-by="name">
+                    <md-icon></md-icon>{{ 'NAME' | translate }}
+                    </th>
+                    <th class="text-center text-uppercase bold" md-column md-order-by="price">
+                    <md-icon></md-icon>{{ 'PRICE' | translate }}
+                    </th>
+                    <th class="text-center text-uppercase bold" md-column>{{ 'SUBCATEGORY' | translate }}</th>
+                    <th class="text-center text-uppercase bold" md-column>{{ 'CATEGORY' | translate }}</th>
+                    <th class="text-center text-uppercase bold" md-column md-order-by="views">
+                    <md-icon></md-icon>{{ 'VIEWS' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">{{ 'STATUS' | translate }}</th>
+                    <th md-column></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="item in items">
+                    <td md-cell class="text-center">
+                    {{:: item.name }}
+                    </td>
+                    <td md-cell class="text-center">
+                    {{:: item.price | currency }}
+                    </td>
+                    <td md-cell class="text-center">
+                    {{:: item.subcategory.name }}
+                    </td>
+                    <td md-cell class="text-center">
+                    {{:: item.category.name }}
+                    </td>
+                    <td md-cell class="text-center">
+                    {{:: item.views }}
+                    </td>
+                    <td md-cell class="text-center">
+                        <md-select class="label" ng-model="item.status" aria-label="Status"
+                        ng-class="item.status == 'Active' ? 'green' : 'yellow'">
+                            <md-option value="Active" ng-click="onChangeStatus(item, 'Active')">
+                                {{ 'ACTIVE' | translate }}
+                            </md-option>
+                            <md-option value="Inactive" ng-click="onChangeStatus(item, 'Inactive')">
+                                {{ 'INACTIVE' | translate }}
+                            </md-option>
+                        </md-select>
+                    </td>
+                    <td md-cell>
+                        <section layout="row" layout-align="center center">
+
+                            <div flex="50">
+                            <md-button class="md-icon-button md-primary" ng-click="onEdit($event, item)" aria-label="Edit">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            </md-button>
+                            </div>
+                            <div flex="50">
+                            <md-button class="md-icon-button md-primary" ng-click="onDelete($event, item)" aria-label="Delete">
+                                <ng-md-icon icon="clear"></ng-md-icon>
+                            </md-button>
+                            </div>
+                        </section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-limit-options="rowOptions" md-limit="query.limit" md-page="query.page" md-total="{{query.total}}"
+        md-on-paginate="onPaginationChange">
+    </md-table-pagination>
+</md-content>

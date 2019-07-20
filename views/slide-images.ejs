@@ -1,0 +1,72 @@
+<md-content class="main-content" ng-controller="SlideImageCtrl">
+
+    <md-table-toolbar>
+        <div layout="row" layout-align="center center" class="padding">
+            <span flex></span>
+            <md-button class="md-primary md-raised"
+                md-colors="::{ color: 'white' }"    
+                aria-label="New"
+                ng-click="onEdit($event)">
+                {{ 'CREATE' | translate }}
+            </md-button>
+        </div>
+    </md-table-toolbar>
+   
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column class="text-uppercase bold">
+                    {{ 'IMAGE' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold" md-order-by="sort">
+                    <md-icon></md-icon>{{ 'SORT' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">
+                    {{ 'ITEM' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">
+                    {{ 'URL' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">
+                    {{ 'STATUS' | translate }}
+                    </th>
+                    <th md-column></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="slide in slides">
+                    <td md-cell>
+                      <img width="80"
+                        ng-src="/images/placeholder.png"
+                        actual-src="{{:: slide.image.url() }}" />
+                    </td>
+                    <td md-cell class="text-center">{{:: slide.sort }}</td> 
+                    <td md-cell class="text-center">{{:: slide.item.name }}</td>
+                    <td md-cell class="text-center">{{:: slide.url }}</td>
+                    <td md-cell class="text-center">
+                        <span class="label"
+						  ng-class="::{ 'green': slide.isActive,
+						  'yellow': !slide.isActive }">
+							<span ng-if="slide.isActive">{{ 'ACTIVE' | translate }}</span>
+							<span ng-if="!slide.isActive">{{ 'INACTIVE' | translate }}</span>
+						</span>
+                    </td>
+                    <td md-cell>
+                        <section layout="row" layout-align="center center">
+							<md-button class="md-icon-button md-primary"
+                              ng-click="onEdit($event, slide)" aria-label="Edit" flex="35">
+								<ng-md-icon icon="mode_edit"></ng-md-icon>
+							</md-button>
+							<md-button class="md-icon-button md-primary"
+                              ng-click="onDelete($event, slide)" aria-label="Delete" flex="35">
+								<ng-md-icon icon="clear"></ng-md-icon>
+							</md-button>
+						</section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+</md-content>

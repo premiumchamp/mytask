@@ -1,0 +1,88 @@
+<md-content class="main-content" ng-controller="ZoneCtrl">
+    <md-table-toolbar>
+        <div layout="row" layout-xs="column" layout-sm="column" class="padding"
+        layout-align-gt-sm="start center">
+            <md-input-container class="md-block no-margin padding-bottom" md-no-float flex="100" flex-gt-md="25">
+                <input type="text" placeholder="{{ 'SEARCH' | translate }}"
+                    ng-model="query.canonical"
+                    ng-keypress="$event.keyCode === 13 && onReload()" />
+            </md-input-container>
+            <md-input-container class="md-block no-margin padding-bottom" md-no-float flex="100" flex-gt-md="25">
+                <md-select ng-model="query.parent" placeholder="{{ 'PARENT' | translate }}"
+                    ng-change="onReload()"
+                    ng-model-options="{ trackBy: '$value.id' }">
+                    <md-option value="">
+                        {{ 'ALL' | translate }}
+                    </md-option>
+                    <md-option ng-repeat="zone in parentZones track by zone.id" ng-value="zone">
+                        {{ zone.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container style="margin-left:6px !important;" class="md-block no-margin padding-bottom" md-no-float flex="100" flex-gt-md="25">
+               <md-checkbox class="no-margin" aria-label="Only Parent" ng-change="onReload()" ng-model="query.onlyParent">{{ 'ONLY_PARENT' | translate }}</md-checkbox>
+            </md-input-container>
+            <span flex></span>
+            <div class="padding-bottom">
+                <md-button class="md-primary md-raised"
+                    md-colors="::{ color: 'white' }"    
+                    aria-label="New"
+                    ng-click="onEdit($event)">
+                    {{ 'CREATE' | translate }}
+                </md-button>
+            </div>
+        </div>
+    </md-table-toolbar>
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column class="text-center text-uppercase bold" md-order-by="name">
+                    <md-icon></md-icon>{{ 'NAME' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold" md-order-by="sort">
+                    <md-icon></md-icon>{{ 'SORT' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">
+                    <md-icon></md-icon>{{ 'PARENT' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold" md-order-by="fee">
+                    <md-icon></md-icon>{{ 'FEE' | translate }}
+                    </th>
+                    <th md-column class="text-center text-uppercase bold">
+                    {{ 'ACTIVE' | translate }}
+                    </th>
+                    <th md-column></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="zone in zones">
+                    <td md-cell class="text-center">
+                        {{:: zone.name }}</td>
+                    <td md-cell class="text-center">
+                        {{:: zone.sort }}</td>
+                    <td md-cell class="text-center">
+                        {{:: zone.parent.name }}</td>
+                    <td md-cell class="text-center">
+                        {{:: zone.fee | currency }}</td>
+                    <td md-cell class="text-center">
+                        {{:: zone.isActive ? ('YES' | translate): ('NO' | translate) }}</td>
+                    <td md-cell>
+                        <section layout="row" layout-align="center center">
+                            <md-button class="md-icon-button md-primary" ng-click="onEdit($event, zone)" aria-label="Edit" flex="35">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="onDelete($event, zone)" aria-label="Delete" flex="35">
+                                <ng-md-icon icon="clear"></ng-md-icon>
+                            </md-button>
+                        </section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <md-table-pagination md-limit-options="rowOptions" md-limit="query.limit" md-page="query.page"  md-total="{{query.total}}"
+        md-on-paginate="onPaginationChange">
+    </md-table-pagination>
+</md-content>

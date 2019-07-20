@@ -1,0 +1,102 @@
+<md-content class="main-content" ng-controller="OrderCtrl">
+  <md-table-toolbar>
+    <div layout="row" layout-xs="column" layout-sm="column" class="padding"
+      layout-align-gt-sm="start center">
+      <md-input-container class="md-block" flex="100" flex-gt-md="20">
+        <label>{{ 'SEARCH_BY_ORDER_NUMBER' | translate }}</label>
+        <input type="text" ng-model="query.number" placeholder>
+      </md-input-container>
+      <md-input-container class="md-block" flex="100" flex-gt-md="20">
+        <label>{{ 'START' | translate }}</label>
+        <input type="date" ng-model="query.start" placeholder>
+      </md-input-container>
+      <md-input-container class="md-block" flex="100" flex-gt-md="20">
+        <label>{{ 'END' | translate }}</label>
+        <input type="date" ng-model="query.end" placeholder>
+      </md-input-container>
+      <div flex="100" flex="15">
+        <md-button class="md-primary md-raised no-margin"
+          md-colors="::{ color: 'white' }"    
+          aria-label="New"
+          ng-click="onReload()">
+          {{ 'SEARCH' | translate }}
+        </md-button>
+      </div>
+      
+      <div flex></div>
+      <div>
+        <md-button class="md-icon-button" hide-xs hide-sm aria-label="Reload" ng-click="onReload()">
+          <ng-md-icon icon="refresh">
+          </ng-md-icon>
+        </md-button>
+      </div>
+    </div>
+  </md-table-toolbar>
+
+  <md-table-container>
+    <table md-table md-progress="promise">
+      <thead md-head md-on-reorder="onReorder">
+        <tr md-row>
+          <th md-column class="text-center text-uppercase bold" md-order-by="number">
+            <md-icon></md-icon>{{ 'ORDER_NUMBER' | translate }}
+          </th>
+          <th md-column class="text-center text-uppercase bold" md-order-by="createdAt">
+            <md-icon></md-icon>{{ 'DATE' | translate }}
+          </th>
+          <th md-column class="text-center text-uppercase bold">
+          {{ 'CUSTOMER' | translate }}</th>
+          <th md-column class="text-center text-uppercase bold" md-order-by="total">
+            <md-icon></md-icon>{{ 'TOTAL' | translate }}
+          </th>
+          <th md-column class="text-center text-uppercase bold">
+          {{ 'STATUS' | translate }}</th>
+          <th md-column></th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row ng-repeat="order in orders track by order.id">
+          <td class="text-center link" md-cell ng-click="onView($event, order)">
+          {{ 'ORDER' | translate }} #{{:: order.number }}
+          </td>
+          <td class="text-center" md-cell>{{:: order.createdAt | date:'dd-MM-yyyy' }}</td>
+          <td class="text-center" md-cell>{{:: order.customer.name }}</td>
+          <td class="text-center" md-cell>{{:: order.total | currency }}</td>
+          <td class="text-center" md-cell>
+
+              <md-select class="label" ng-model="order.status" placeholder="Status" ng-change="onChangeStatus(order)"
+              ng-class="{ yellow: order.isUnpaid(), green: order.isPaid(), blue: order.isPacked(), purple: order.isShippedOut(), red: order.isCancelled() }">
+                <md-option value="Unpaid">{{ 'UNPAID' | translate }}</md-option>
+                <md-option value="Paid">{{ 'PAID' | translate }}</md-option>
+                <md-option value="Packed">{{ 'PACKED' | translate }}</md-option>
+                <md-option value="Shipped Out">{{ 'SHIPPED_OUT' | translate }}</md-option>
+                <md-option value="Cancelled">{{ 'CANCELLED' | translate }}</md-option>
+              </md-select>
+
+          </td>
+          <td md-cell>
+            <md-button class="md-icon-button md-primary"
+              ng-click="onDelete($event, order)" aria-label="Delete">
+              <ng-md-icon icon="clear"></ng-md-icon>
+            </md-button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot md-foot ng-if="total > 0">
+        <tr md-row>
+          <td md-cell></td>
+          <td md-cell></td>
+          <td md-cell></td>
+          <td md-cell class="text-center">
+            <strong>{{ total | currency }}</strong>
+          </td>
+          <td md-cell colspan="6"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </md-table-container>
+
+  <md-table-pagination md-limit-options="rowOptions" md-limit="query.limit" md-page="query.page" md-total="{{query.total}}"
+    md-on-paginate="onPaginationChange">
+  </md-table-pagination>
+
+</md-content>
