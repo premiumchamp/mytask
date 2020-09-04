@@ -16,7 +16,7 @@
     "ejs": "2.4.1",
     "express": "4.14.0",
     "express-ejs-layouts": "2.0.0",
-    "kerberos": "0.0.23",
+    "kerberos": "1.1.3",
     "limax": "^1.7.0",
     "mailgen": "1.0.20",
     "mailgun-js": "0.7.7",
